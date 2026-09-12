@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billy Shi 的生活规划</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        --bg: #f5f5f3;
+        --card: #ffffff;
+        --text: #171717;
+        --muted: #888;
+        --line: #e8e8e5;
+        --soft: #f7f7f5;
+        --accent: #222;
+        --radius: 20px;
+    }
+
+    body {
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "SF Pro Display",
+            "SF Pro Text",
+            "Helvetica Neue",
+            Arial,
+            sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 1250px;
+        margin: 0 auto;
+        padding: 42px 28px 60px;
+    }
+
+    /* Header */
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 36px;
+    }
+
+    .eyebrow {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        font-size: clamp(32px, 5vw, 52px);
+        font-weight: 600;
+        letter-spacing: -2px;
+        line-height: 1.05;
+    }
+
+    .date-box {
+        text-align: right;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .date-box strong {
+        display: block;
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 3px;
+    }
+
+    /* Grid */
+
+    .dashboard {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr 1fr;
+        gap: 18px;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.025);
+    }
+
+    .card.large {
+        grid-row: span 2;
+    }
+
+    .card.wide {
+        grid-column: span 2;
+    }
+
+    .card-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .card-title h2 {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -.3px;
+    }
+
+    .number {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    /* Goals */
+
+    .goal {
+        padding: 17px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .goal:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .goal:first-child {
+        padding-top: 0;
+    }
+
+    .goal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .goal-name {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .goal-percent {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .progress {
+        height: 5px;
+        background: #eeeeeb;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: #222;
+        border-radius: 10px;
+        transition: width .5s ease;
+    }
+
+    .goal-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 7px;
+    }
+
+    /* Todo */
+
+    .todo-list {
+        list-style: none;
+    }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        cursor: pointer;
+    }
+
+    .todo-item:last-child {
+        border-bottom: none;
+    }
+
+    .checkbox {
+        width: 18px;
+        height: 18px;
+        border: 1px solid #bbb;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: .2s;
+    }
+
+    .todo-item.done .checkbox {
+        background: #222;
+        border-color: #222;
+    }
+
+    .todo-item.done .checkbox::after {
+        content: "✓";
+        color: white;
+        font-size: 11px;
+    }
+
+    .todo-item.done .todo-text {
+        text-decoration: line-through;
+        color: #aaa;
+    }
+
+    .todo-text {
+        font-size: 13px;
+        transition: .2s;
+    }
+
+    .tag {
+        margin-left: auto;
+        font-size: 10px;
+        color: #777;
+        background: var(--soft);
+        padding: 4px 8px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    /* Habits */
+
+    .habit {
+        margin-bottom: 19px;
+    }
+
+    .habit:last-child {
+        margin-bottom: 0;
+    }
+
+    .habit-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .habit-name {
+        font-size: 13px;
+    }
+
+    .habit-count {
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .habit-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .day {
+        aspect-ratio: 1;
+        background: #f1f1ee;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 8px;
+        color: #999;
+        transition: .2s;
+    }
+
+    .day.active {
+        background: #222;
+        color: white;
+    }
+
+    /* Schedule */
+
+    .schedule-item {
+        display: grid;
+        grid-template-columns: 65px 1fr;
+        gap: 12px;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .schedule-item:last-child {
+        border-bottom: none;
+    }
+
+    .time {
+        font-size: 11px;
+        color: var(--muted);
+        padding-top: 2px;
+    }
+
+    .event-name {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .event-detail {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+
+    /* Important Dates */
+
+    .important-date {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .important-date:last-child {
+        border-bottom: none;
+    }
+
+    .date-number {
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        background: #f2f2ef;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .date-number .day-num {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .date-number .month {
+        font-size: 8px;
+        color: var(--muted);
+        margin-top: 3px;
+        text-transform: uppercase;
+    }
+
+    .date-info {
+        flex: 1;
+    }
+
+    .date-name {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .date-desc {
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .days-left {
+        font-size: 10px;
+        color: var(--muted);
+    }
+
+    /* Quote */
+
+    .quote {
+        background: #202020;
+        color: white;
+        border-radius: var(--radius);
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 160px;
+    }
+
+    .quote-mark {
+        font-size: 32px;
+        opacity: .35;
+    }
+
+    .quote-text {
+        font-size: 17px;
+        line-height: 1.5;
+        letter-spacing: -.3px;
+    }
+
+    .quote-author {
+        font-size: 10px;
+        opacity: .5;
+        margin-top: 15px;
+    }
+
+    /* Footer */
+
+    footer {
+        margin-top: 28px;
+        display: flex;
+        justify-content: space-between;
+        color: #aaa;
+        font-size: 11px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 900px) {
+        .dashboard {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card.large {
+            grid-row: auto;
+        }
+
+        .card.wide {
+            grid-column: span 2;
+        }
+    }
+
+    @media (max-width: 620px) {
+        .container {
+            padding: 28px 16px 45px;
+        }
+
+        header {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .date-box {
+            text-align: left;
+        }
+
+        .dashboard {
+            grid-template-columns: 1fr;
+        }
+
+        .card.wide {
+            grid-column: span 1;
+        }
+
+        h1 {
+            letter-spacing: -1.5px;
+        }
+
+        footer {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div>
+            <div class="eyebrow">Personal Dashboard</div>
+            <h1>Billy Shi 的生活规划</h1>
+        </div>
+
+        <div class="date-box">
+            <strong id="todayDate"></strong>
+            <span id="weekDay"></span>
+        </div>
+    </header>
+
+
+    <main class="dashboard">
+
+        <!-- Goals -->
+        <section class="card large">
+            <div class="card-title">
+                <h2>目标 Goals</h2>
+                <span class="number">2026 — 2027</span>
+            </div>
+
+            <div class="goal">
+                <div class="goal-header">
+                    <span class="goal-name">学业与成绩</span>
+                    <span class="goal-percent">75%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:75%"></div>
+                </div>
+                <div class="goal-note">保持稳定学习节奏，争取优秀成绩</div>
+            </div>
+
+            <div class="goal">
+                <div class="goal-header">
+                    <span class="goal-name">海外交换 / 留学</span>
+                    <span class="goal-percent">55%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:55%"></div>
+                </div>
+                <div class="goal-note">完成申请、课程与签证准备</div>
+            </div>
+
+            <div class="goal">
+                <div class="goal-header">
+                    <span class="goal-name">个人成长</span>
+                    <span class="goal-percent">60%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:60%"></div>
+                </div>
+                <div class="goal-note">建立规律生活与长期习惯</div>
+            </div>
+
+            <div class="goal">
+                <div class="goal-header">
+                    <span class="goal-name">旅行与体验</span>
+                    <span class="goal-percent">40%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:40%"></div>
+                </div>
+                <div class="goal-note">探索新的城市、文化与生活方式</div>
+            </div>
+
+            <div class="goal">
+                <div class="goal-header">
+                    <span class="goal-name">财务规划</span>
+                    <span class="goal-percent">35%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:35%"></div>
+                </div>
+                <div class="goal-note">记录支出，建立储蓄意识</div>
+            </div>
+        </section>
+
+
+        <!-- Todo -->
+        <section class="card">
+            <div class="card-title">
+                <h2>待办 To-do</h2>
+                <span class="number" id="todoCount">0 / 5</span>
+            </div>
+
+            <ul class="todo-list">
+
+                <li class="todo-item" data-id="todo1">
+                    <span class="checkbox"></span>
+                    <span class="todo-text">完成本周课程复习</span>
+                    <span class="tag">Study</span>
+                </li>
+
+                <li class="todo-item" data-id="todo2">
+                    <span class="checkbox"></span>
+                    <span class="todo-text">整理下周计划</span>
+                    <span class="tag">Life</span>
+                </li>
+
+                <li class="todo-item" data-id="todo3">
+                    <span class="checkbox"></span>
+                    <span class="todo-text">检查重要申请日期</span>
+                    <span class="tag">Important</span>
+                </li>
+
+                <li class="todo-item" data-id="todo4">
+                    <span class="checkbox"></span>
+                    <span class="todo-text">整理电脑文件</span>
+                    <span class="tag">Admin</span>
+                </li>
+
+                <li class="todo-item" data-id="todo5">
+                    <span class="checkbox"></span>
+                    <span class="todo-text">留出时间休息</span>
+                    <span class="tag">Life</span>
+                </li>
+
+            </ul>
+        </section>
+
+
+        <!-- Habits -->
+        <section class="card">
+            <div class="card-title">
+                <h2>习惯 Habits</h2>
+                <span class="number">本周</span>
+            </div>
+
+            <div class="habit">
+                <div class="habit-info">
+                    <span class="habit-name">学习</span>
+                    <span class="habit-count" data-count="study">0 / 7</span>
+                </div>
+
+                <div class="habit-days" data-habit="study">
+                    <div class="day">一</div>
+                    <div class="day">二</div>
+                    <div class="day">三</div>
+                    <div class="day">四</div>
+                    <div class="day">五</div>
+                    <div class="day">六</div>
+                    <div class="day">日</div>
+                </div>
+            </div>
+
+            <div class="habit">
+                <div class="habit-info">
+                    <span class="habit-name">运动</span>
+                    <span class="habit-count" data-count="exercise">0 / 7</span>
+                </div>
+
+                <div class="habit-days" data-habit="exercise">
+                    <div class="day">一</div>
+                    <div class="day">二</div>
+                    <div class="day">三</div>
+                    <div class="day">四</div>
+                    <div class="day">五</div>
+                    <div class="day">六</div>
+                    <div class="day">日</div>
+                </div>
+            </div>
+
+            <div class="habit">
+                <div class="habit-info">
+                    <span class="habit-name">早睡</span>
+                    <span class="habit-count" data-count="sleep">0 / 7</span>
+                </div>
+
+                <div class="habit-days" data-habit="sleep">
+                    <div class="day">一</div>
+                    <div class="day">二</div>
+                    <div class="day">三</div>
+                    <div class="day">四</div>
+                    <div class="day">五</div>
+                    <div class="day">六</div>
+                    <div class="day">日</div>
+                </div>
+            </div>
+
+            <div class="habit">
+                <div class="habit-info">
+                    <span class="habit-name">阅读</span>
+                    <span class="habit-count" data-count="reading">0 / 7</span>
+                </div>
+
+                <div class="habit-days" data-habit="reading">
+                    <div class="day">一</div>
+                    <div class="day">二</div>
+                    <div class="day">三</div>
+                    <div class="day">四</div>
+                    <div class="day">五</div>
+                    <div class="day">六</div>
+                    <div class="day">日</div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Schedule -->
+        <section class="card wide">
+            <div class="card-title">
+                <h2>今日 / 本周日程 Schedule</h2>
+                <span class="number">Weekly View</span>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">09:00</div>
+                <div>
+                    <div class="event-name">Morning Routine</div>
+                    <div class="event-detail">早餐 · 整理今日任务</div>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">10:00</div>
+                <div>
+                    <div class="event-name">Study Block</div>
+                    <div class="event-detail">课程学习 / 复习</div>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">13:00</div>
+                <div>
+                    <div class="event-name">Lunch & Break</div>
+                    <div class="event-detail">午餐 · 放松</div>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">14:00</div>
+                <div>
+                    <div class="event-name">Deep Work</div>
+                    <div class="event-detail">作业 / Essay / Project</div>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">18:00</div>
+                <div>
+                    <div class="event-name">Personal Time</div>
+                    <div class="event-detail">运动 · 晚餐 · 社交</div>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="time">22:30</div>
+                <div>
+                    <div class="event-name">Wind Down</div>
+                    <div class="event-detail">减少屏幕使用 · 准备睡觉</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Important Dates -->
+        <section class="card">
+            <div class="card-title">
+                <h2>重要日期</h2>
+                <span class="number">Important</span>
+            </div>
+
+            <div class="important-date">
+                <div class="date-number">
+                    <span class="day-num">18</span>
+                    <span class="month">OCT</span>
+                </div>
+
+                <div class="date-info">
+                    <div class="date-name">申请截止</div>
+                    <div class="date-desc">重要项目申请 Deadline</div>
+                </div>
+
+                <div class="days-left">Deadline</div>
+            </div>
+
+            <div class="important-date">
+                <div class="date-number">
+                    <span class="day-num">22</span>
+                    <span class="month">DEC</span>
+                </div>
+
+                <div class="date-info">
+                    <div class="date-name">Winter Campus</div>
+                    <div class="date-desc">项目开始</div>
+                </div>
+
+                <div class="days-left">2026</div>
+            </div>
+
+            <div class="important-date">
+                <div class="date-number">
+                    <span class="day-num">08</span>
+                    <span class="month">JAN</span>
+                </div>
+
+                <div class="date-info">
+                    <div class="date-name">Winter Campus</div>
+                    <div class="date-desc">项目结束</div>
+                </div>
+
+                <div class="days-left">2027</div>
+            </div>
+
+            <div class="important-date">
+                <div class="date-number">
+                    <span class="day-num">01</span>
+                    <span class="month">JAN</span>
+                </div>
+
+                <div class="date-info">
+                    <div class="date-name">New Year</div>
+                    <div class="date-desc">新的一年</div>
+                </div>
+
+                <div class="days-left">2027</div>
+            </div>
+
+        </section>
+
+
+        <!-- Quote -->
+        <section class="quote">
+            <div class="quote-mark">“</div>
+
+            <div class="quote-text">
+                Build a life you don't need a vacation from.
+            </div>
+
+            <div class="quote-author">
+                — Personal reminder
+            </div>
+        </section>
+
+    </main>
+
+
+    <footer>
+        <span>Billy Shi · Personal Life Planner</span>
+        <span>Plan quietly. Live fully.</span>
+    </footer>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       日期
+    ========================= */
+
+    const today = new Date();
+
+    const dateOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    };
+
+    document.getElementById("todayDate").textContent =
+        today.toLocaleDateString("en-AU", dateOptions);
+
+    document.getElementById("weekDay").textContent =
+        today.toLocaleDateString("zh-CN", {
+            weekday: "long"
+        });
+
+
+    /* =========================
+       Todo 保存
+    ========================= */
+
+    const todoItems = document.querySelectorAll(".todo-item");
+
+    function updateTodoCount() {
+
+        const completed =
+            document.querySelectorAll(".todo-item.done").length;
+
+        document.getElementById("todoCount").textContent =
+            `${completed} / ${todoItems.length}`;
+    }
+
+    todoItems.forEach(item => {
+
+        const id = item.dataset.id;
+
+        if (localStorage.getItem(id) === "done") {
+            item.classList.add("done");
+        }
+
+        item.addEventListener("click", () => {
+
+            item.classList.toggle("done");
+
+            if (item.classList.contains("done")) {
+                localStorage.setItem(id, "done");
+            } else {
+                localStorage.removeItem(id);
+            }
+
+            updateTodoCount();
+        });
+
+    });
+
+    updateTodoCount();
+
+
+    /* =========================
+       Habit 保存
+    ========================= */
+
+    document.querySelectorAll(".habit-days").forEach(group => {
+
+        const habitName = group.dataset.habit;
+        const days = group.querySelectorAll(".day");
+
+        days.forEach((day, index) => {
+
+            const key = `habit-${habitName}-${index}`;
+
+            if (localStorage.getItem(key) === "active") {
+                day.classList.add("active");
+            }
+
+            day.addEventListener("click", () => {
+
+                day.classList.toggle("active");
+
+                if (day.classList.contains("active")) {
+                    localStorage.setItem(key, "active");
+                } else {
+                    localStorage.removeItem(key);
+                }
+
+                updateHabitCount(habitName);
+            });
+        });
+
+        updateHabitCount(habitName);
+    });
+
+
+    function updateHabitCount(habitName) {
+
+        const group =
+            document.querySelector(
+                `.habit-days[data-habit="${habitName}"]`
+            );
+
+        const count =
+            group.querySelectorAll(".day.active").length;
+
+        const counter =
+            document.querySelector(
+                `[data-count="${habitName}"]`
+            );
+
+        if (counter) {
+            counter.textContent = `${count} / 7`;
+        }
+    }
+
+</script>
+
+</body>
+</html>
